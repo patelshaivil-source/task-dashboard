@@ -112,3 +112,32 @@ with t1:
                     st.balloons()
                     st.rerun()
                 st.markdown("---")
+                import plotly.express as px
+import plotly.graph_objects as go
+
+# --- VISUAL INTELLIGENCE SECTION ---
+st.markdown("### 📊 Analytics Overview")
+analytics_col1, analytics_col2 = st.columns([2, 1])
+
+if not st.session_state.tasks_df.empty:
+    with analytics_col1:
+        # Task Distribution Bar Chart
+        df_counts = st.session_state.tasks_df['Category'].value_counts().reset_index()
+        df_counts.columns = ['Timeline', 'Count']
+        
+        fig = px.bar(df_counts, x='Timeline', y='Count', 
+                     color_discrete_sequence=['#FFD700'],
+                     template="plotly_dark")
+        fig.update_layout(plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)', height=300)
+        st.plotly_chart(fig, use_container_width=True)
+
+    with analytics_col2:
+        # Priority Donut Chart
+        prio_counts = st.session_state.tasks_df['Priority'].value_counts()
+        fig_pie = px.pie(names=prio_counts.index, values=prio_counts.values, 
+                         hole=0.7, color_discrete_sequence=['#FFD700', '#C0C0C0', '#444444'])
+        fig_pie.update_layout(showlegend=False, height=300, margin=dict(t=0, b=0, l=0, r=0),
+                              paper_bgcolor='rgba(0,0,0,0)')
+        st.plotly_chart(fig_pie, use_container_width=True)
+else:
+    st.write("Add tasks to generate visual analytics.")
